@@ -15,11 +15,18 @@ class HasherTest < Test::Unit::TestCase
     assert_equal @array.word_count, 5
   end
 
-  def test_valid_word
-    assert (not Ankusa::TextHash.valid_word? "accordingly")
-    assert (not Ankusa::TextHash.valid_word? "appropriate")
-    assert Ankusa::TextHash.valid_word? "^*&@"
-    assert Ankusa::TextHash.valid_word? "mother"
-    assert (not Ankusa::TextHash.valid_word? "21675")
+  def test_add_text_valid_ascii
+    t = Ankusa::TextHash.new.add_text('valid')
+    assert_equal(t[:valid], 1)
+    t.add_text('valid2')
+    assert_equal(t[:valid], 1)
+    assert_equal(t[:valid2], 1)
   end
+
+  def test_add_text_with_invalid_ascii
+    t = Ankusa::TextHash.new.add_text('valid')
+    assert_equal(t, t.add_text('23456'))
+    assert_equal(t, t.add_text('corresponding'))
+  end
+
 end
